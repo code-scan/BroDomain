@@ -37,7 +37,9 @@ def process(function,rfunction,args,num):
 	for a in args:
 		params.put(a)
 	for threads in xrange(num):
-		mthread(function,rfunction,params).start()
+		f=mthread(function,rfunction,params)
+		f.start()
+		f.join()
 def run(domain,prints):
 	num=len(domain)/2
 	if len(domain)>100:
