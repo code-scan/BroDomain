@@ -36,7 +36,10 @@ class aizhan:
 				self.RegName_List.append(R)
 	def GetDomainFromReglist(self):
 		Domain=[]
+		i=1;
 		for N in self.RegName_List:
+			print i,
+			i+=1
 			dom=self.GetSameDomainByEmailCode(N,3,True)
 			self.AppendBro(dom)
 
@@ -83,11 +86,16 @@ class aizhan:
 if len(argv)!=2:
 	print "Usage: python brodomain.py codescan.cn"
 	exit()
+print "[*] Init.."
 query=aizhan(argv[1])
+print "[*] Query Email.."
 query.GetMailByDomain()
+print "[*] Query All Domain Waiting.."
+print "[*] Query ",
 query.GetDomainFromReglist()
-data="Email: %s\nRegistrant: %s"%(query.RegEmail,query.RegName)
-print data
-print "BroDmain Count:%d"%len(query.BroDomain)
+data="Email: %s\nRegistrant: %s\n"%(query.RegEmail,query.RegName)
+data+="BroDmain Count:%d\n"%len(query.BroDomain)
 for D in query.BroDomain:
-	print D
+	data+=D+"\n"
+open('%s.log'%argv[1],'w').write(data)
+print data
