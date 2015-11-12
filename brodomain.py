@@ -7,6 +7,9 @@ from urllib import quote
 from binascii import b2a_base64 as base64_encode
 from binascii import a2b_base64 as base64_decode
 from sys import argv
+from Queue import Queue
+import sys
+import mthread
 class aizhan:
 	def __init__(self,domain='',mail='',name=''):
 		self.domain=domain
@@ -81,8 +84,34 @@ class aizhan:
 		if len(reg_name)==1:
 			self.RegName=reg_name[0]
 			self.GetSameDomainByEmailCode(self.RegName,3)
+result=Queue()
+def stdout( name):
+	global result
+	scanow ='[*] Find %s of %d'%(name,result.qsize())
+	sys.stdout.write(str(scanow)+" "*20+"\b\b\r")
+	sys.stdout.flush()
+def prints(d):
+	global result,data,over
+	if d=='Ennnnnnd':
+		if over==1:
+			return 0
+		over=1
+		data+="SubDomain\n"
+		while result.empty()==False:
+			p=result.get(timeout=1)
+			if p:
+				data+=p+"\n"
+		#print data
+		print "[*] Query Over,Result is in %s.log"	%argv[1]			
+		open('%s.log'%argv[1],'w').write(data)
+		
+		
+		exit()
+	for i in d:
+		stdout(i)
+		result.put(i)	
 			
-
+over=0
 if len(argv)!=2:
 	print "Usage: python brodomain.py codescan.cn"
 	exit()
@@ -95,7 +124,9 @@ print "[*] Query ",
 query.GetDomainFromReglist()
 data="Email: %s\nRegistrant: %s\n"%(query.RegEmail,query.RegName)
 data+="BroDmain Count:%d\n"%len(query.BroDomain)
+print "\n[*]BroDmain Count:%d\n"%len(query.BroDomain)
 for D in query.BroDomain:
 	data+=D+"\n"
-open('%s.log'%argv[1],'w').write(data)
-print data
+
+
+m=mthread.run(query.BroDomain,prints)
