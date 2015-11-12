@@ -84,10 +84,10 @@ class aizhan:
 		if len(reg_name)==1:
 			self.RegName=reg_name[0]
 			self.GetSameDomainByEmailCode(self.RegName,3)
-result=Queue()
+result=[]
 def stdout( name):
 	global result
-	scanow ='[*] Find %s of %d'%(name,result.qsize())
+	scanow ='[*] Find %s of %d'%(name,len(result))
 	sys.stdout.write(str(scanow)+" "*20+"\b\b\r")
 	sys.stdout.flush()
 def prints(d):
@@ -97,20 +97,36 @@ def prints(d):
 			return 0
 		over=1
 		data+="SubDomain\n"
-		while result.empty()==False:
-			p=result.get(timeout=1)
+		for p in result:
 			if p:
 				data+=p+"\n"
-		#print data
 		print "[*] Query Over,Result is in %s.log"	%argv[1]			
 		open('%s.log'%argv[1],'w').write(data)
-		
-		
-		exit()
+		return 1
 	for i in d:
 		stdout(i)
-		result.put(i)	
+		result.append(i)	
+def write_html(dicts):
+	html=""
+	for key,value in dicts.items():
+		print key,value
+		if value:
+			data='''		<li>
+				<div class="link"><i class="fa fa-paint-brush"></i>{Domain}<i class="fa fa-chevron-down"></i></div>
+				<ul class="submenu">
+					{li}
+			</ul>
+			</li>
+			'''.replace("{Domain}",key)
+			li=""
+			for d in value.split(","):
+				li+='<li><a href="'+d+'">'+d+'</a></li>'
+			data=data.replace("{li}",li)
+			html+=data
 			
+	htmls=open('result_temp.html').read()	
+	htmls=htmls.replace("{html}",html)
+	open(argv[1]+".html",'w').write(htmls)
 over=0
 if len(argv)!=2:
 	print "Usage: python brodomain.py codescan.cn"
@@ -124,9 +140,22 @@ print "[*] Query ",
 query.GetDomainFromReglist()
 data="Email: %s\nRegistrant: %s\n"%(query.RegEmail,query.RegName)
 data+="BroDmain Count:%d\n"%len(query.BroDomain)
-print "\n[*]BroDmain Count:%d\n"%len(query.BroDomain)
+print "\n[*] BroDmain Count:%d\n"%len(query.BroDomain)
 for D in query.BroDomain:
 	data+=D+"\n"
-
-
 m=mthread.run(query.BroDomain,prints)
+
+dicts={}
+for Ds in query.BroDomain:
+	Ds=Ds.replace("http://www",'')
+	Ds=Ds.replace("/",'')
+	print Ds
+	dicts.update({Ds:''})
+	for D in result:	
+		#print D
+		if Ds in D:
+			#print D
+			data=dicts[Ds]
+			dicts.update({Ds:data+","+D})
+print "[*]] Html Result in "+argv[1]+".html"
+write_html(dicts)	
