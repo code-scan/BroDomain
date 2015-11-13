@@ -109,7 +109,7 @@ def prints(d):
 def write_html(dicts):
 	html=""
 	for key,value in dicts.items():
-		print key,value
+		#print key,value
 		if value:
 			data='''		<li>
 				<div class="link"><i class="fa fa-paint-brush"></i>{Domain}<i class="fa fa-chevron-down"></i></div>
@@ -149,7 +149,7 @@ dicts={}
 for Ds in query.BroDomain:
 	Ds=Ds.replace("http://www",'')
 	Ds=Ds.replace("/",'')
-	print Ds
+	#print Ds
 	dicts.update({Ds:''})
 	for D in result:	
 		#print D
@@ -157,5 +157,5 @@ for Ds in query.BroDomain:
 			#print D
 			data=dicts[Ds]
 			dicts.update({Ds:data+","+D})
-print "[*]] Html Result in "+argv[1]+".html"
+print "[*] Html Result in "+argv[1]+".html"
 write_html(dicts)	
