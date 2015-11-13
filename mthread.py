@@ -8,7 +8,7 @@ import re
 from time import sleep
 import sys
 import socket
-import dns.resolver
+
 class mthread(threading.Thread):
 	def __init__(self,function,rfunction,args):
 		threading.Thread.__init__(self)
