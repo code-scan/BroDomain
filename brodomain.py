@@ -92,25 +92,32 @@ def stdout( name):
 	sys.stdout.flush()
 def prints(d):
 	global result,data,over
+
+	for i in d:
+		stdout(i)
+		result.append(i)	
+result_ip=[]		
+def prints_ip(d):
+	global result_ip,data,over
+	if 'Ennnn' not in d:
+		result_ip.append(d)
 	if d=='Ennnnnnd':
 		if over==1:
 			return 0
 		over=1
 		data+="SubDomain\n"
-		for p in result:
+		for p in result_ip:
 			if p:
 				data+=p+"\n"
 		print "[*] Query Over,Result is in %s.log"	%argv[1]			
 		open('%s.log'%argv[1],'w').write(data)
-		return 1
-	for i in d:
-		stdout(i)
-		result.append(i)	
+		return 1		
+		
 def write_html(dicts):
 	html=""
 	for key,value in dicts.items():
 		#print key,value
-		if value:
+		if value!='':
 			data='''		<li>
 				<div class="link"><i class="fa fa-paint-brush"></i>{Domain}<i class="fa fa-chevron-down"></i></div>
 				<ul class="submenu">
@@ -119,8 +126,14 @@ def write_html(dicts):
 			</li>
 			'''.replace("{Domain}",key)
 			li=""
-			for d in value.split(","):
-				li+='<li><a href="'+d+'">'+d+'</a></li>'
+			
+			for d in value.split(","):	
+				if d:
+					d=d.split("||")
+					#print d				
+					domain=d[0]
+					ip=d[1].replace("{}",",")
+					li+='<li><a href="'+domain+'">'+domain+" "+ip+'</a></li>'
 			data=data.replace("{li}",li)
 			html+=data
 			
@@ -129,7 +142,7 @@ def write_html(dicts):
 	open(argv[1]+".html",'w').write(htmls)
 over=0
 if len(argv)!=2:
-	print "Usage: python brodomain.py codescan.cn"
+	print "Usage: python brodomain.py codevscan.cn"
 	exit()
 print "[*] Init.."
 query=aizhan(argv[1])
@@ -144,18 +157,24 @@ print "\n[*] BroDmain Count:%d\n"%len(query.BroDomain)
 for D in query.BroDomain:
 	data+=D+"\n"
 m=mthread.run(query.BroDomain,prints)
-
+m=mthread.runip(result,prints_ip)
+#print result_ip
+#exit()
 dicts={}
+
+
+
 for Ds in query.BroDomain:
 	Ds=Ds.replace("http://www",'')
 	Ds=Ds.replace("/",'')
 	#print Ds
 	dicts.update({Ds:''})
-	for D in result:	
+	for D in result_ip:	
 		#print D
 		if Ds in D:
 			#print D
 			data=dicts[Ds]
 			dicts.update({Ds:data+","+D})
 print "[*] Html Result in "+argv[1]+".html"
+#print dicts
 write_html(dicts)	
