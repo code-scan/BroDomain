@@ -7,6 +7,8 @@ import urllib2
 import re
 from time import sleep
 import sys
+import socket
+import dns.resolver
 class mthread(threading.Thread):
 	def __init__(self,function,rfunction,args):
 		threading.Thread.__init__(self)
@@ -31,7 +33,18 @@ def GetSubByDomain(domain):
 	domain=re.findall(SubDomain_regx,data)
 	return domain
 result=Queue.Queue()
-
+Ipresult=Queue.Queue()
+def GetIpByDomain(domain):
+	#print socket.gethostbyname(domain)
+	try:
+		x=dns.resolver.Resolver()
+		f=x.query("baidu.com")
+		ip="{}".join([q.address for q in f])
+		#print ip
+		return domain+"||"+ip
+	except:
+		return ""
+	
 def process(function,rfunction,args,num):
 	params=Queue.Queue()
 	for a in args:
@@ -44,5 +57,12 @@ def run(domain,prints):
 	num=len(domain)/2
 	if len(domain)>100:
 		num=20		
-	process(GetSubByDomain,prints,domain,num)		
-
+	process(GetSubByDomain,prints,domain,num)	
+	
+def runip(domain,prints):
+	num=len(domain)/2
+	#print domain
+	if len(domain)>100:
+		num=20		
+	process(GetIpByDomain,prints,domain,num)	
+	
