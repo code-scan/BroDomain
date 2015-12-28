@@ -165,7 +165,23 @@ def write_html(dicts):
 	open('./log/'+argv[1]+".html",'w').write(htmls)
 over=0
 if len(argv)!=2:
-	print "Usage: python brodomain.py codevscan.cn"
+	print '''
+      ___           ___           ___
+     /\  \         /\  \         /\  \
+    /::\  \       /::\  \       /::\  \
+   /:/\:\  \     /:/\:\  \     /:/\:\  \
+  /::\~\:\__\   /::\~\:\  \   /:/  \:\  \
+ /:/\:\ \:|__| /:/\:\ \:\__\ /:/__/ \:\__\
+ \:\~\:\/:/  / \/_|::\/:/  / \:\  \ /:/  /
+  \:\ \::/  /     |:|::/  /   \:\  /:/  /
+   \:\/:/  /      |:|\/__/     \:\/:/  /
+    \::/__/       |:|  |        \::/  /
+     ~~            \|__|         \/__/
+
+
+	'''
+	print "Usage: python brodomain.py codescan.cn"
+
 	exit()
 print "[*] Init.."
 query=aizhan(argv[1])
