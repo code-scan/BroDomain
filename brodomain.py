@@ -13,6 +13,7 @@ import mthread
 class aizhan:
 	def __init__(self,domain='',mail='',name=''):
 		self.domain=domain
+		self.domain_beian=domain
 		self.mail=mail
 		self.name=name
 		self.GetMailByDomain_regx='<a href="/reverse-whois\?q=(.*)&t=emailCode">'
@@ -25,6 +26,7 @@ class aizhan:
 		self.RegName=''
 		self.RegName_List=[]
 		self.BroDomain=[]
+
 	def AppendDomain(self,Dlist):
 		for D in Dlist:
 			self.SameDomain.append(D)
@@ -37,6 +39,7 @@ class aizhan:
 		for R in Rlist:
 			if R not in self.RegName_List:
 				self.RegName_List.append(R)
+
 	def GetDomainFromReglist(self):
 		Domain=[]
 		i=1;
@@ -47,7 +50,29 @@ class aizhan:
 			self.AppendBro(dom)
 
 		#return Domain
-	
+	def GetDomainBybeian(self,domain='',backquery=False):
+		if domain:
+			self.domain_beian=domain
+		url='http://codescan.cn/beian.php?query=%s'%self.domain_beian
+		data=urllib2.urlopen(url).read()
+		r=re.findall('<td>([\s\S]*?)</td>',data)
+		#print r
+		dlist=[]
+		for i in r:
+
+			i=i.replace('	','').replace('\n','').replace('\r','')
+			if 'ICP' in i and backquery==False:
+				beian=i
+				if '-' in beian:
+					beian=beian.split('-')[0]
+				self.GetDomainBybeian(beian,True)
+				break
+			if '.' in i :
+				dlist.append(i)
+				#print i
+		self.AppendBro(dlist)
+
+
 	def GetSameDomainByEmailCode(self,emailcode,code=1,appends=False):
 		if code==1:
 			url="http://whois.aizhan.com/reverse-whois?q=%s&t=emailCode"%quote(emailcode)
@@ -68,16 +93,17 @@ class aizhan:
 		if appends:
 			return domain
 		self.AppendDomain(domain)
-		if code==2 or code==1:			
-			self.RegEmail=email		
+		if code==2 or code==1:
+			self.RegEmail=email
 		regname_list=re.findall(self.GetRegname_List,data)
 		self.AppendRegName(regname_list)
-		
+
 	def GetMailByDomain(self):
 		url="http://whois.aizhan.com/reverse-whois?q=%s&t=domain"%self.domain
+		#print url
 		data=urllib2.urlopen(url).read()
 		reg=re.findall(self.GetMailByDomain_regx,data)
-		if len(reg)==1:		
+		if len(reg)==1:
 			reg=unquote(reg[0])
 			self.GetSameDomainByEmailCode(reg)
 		reg_name=re.findall(self.GetRegname_regx,data)
@@ -101,19 +127,19 @@ def prints(d):
 			if p:
 				p=p.replace("http://","").replace("https://","").replace("/","")
 				data+=p+"\n"
-		print "[*] Query Over,Result is in %s.log"	%argv[1]			
+		print "[*] Query Over,Result is in %s.log"	%argv[1]
 		open('%s.log'%argv[1],'w').write(data)
-		return 1	
+		return 1
 	for i in d:
 		stdout(i)
-		result.append(i)	
-result_ip=[]		
+		result.append(i)
+result_ip=[]
 def prints_ip(d):
 	global result_ip,data,over
 	if 'Ennnn' not in d:
 		result_ip.append(d)
-	
-		
+
+
 def write_html(dicts):
 	html=""
 	for key,value in dicts.items():
@@ -127,16 +153,16 @@ def write_html(dicts):
 			</li>
 			'''.replace("{Domain}",key)
 			li=""
-			
-			for d in value.split(","):	
+
+			for d in value.split(","):
 				if d:
 					li+='<li><a href="'+d+'">'+d+'</a></li>'
 			data=data.replace("{li}",li)
 			html+=data
-			
-	htmls=open('result_temp.html').read()	
+
+	htmls=open('result_temp.html').read()
 	htmls=htmls.replace("{html}",html)
-	open(argv[1]+".html",'w').write(htmls)
+	open('./log/'+argv[1]+".html",'w').write(htmls)
 over=0
 if len(argv)!=2:
 	print "Usage: python brodomain.py codevscan.cn"
@@ -145,6 +171,8 @@ print "[*] Init.."
 query=aizhan(argv[1])
 print "[*] Query Email.."
 query.GetMailByDomain()
+print "[*] Query Beian Code.."
+query.GetDomainBybeian()
 print "[*] Query All Domain Waiting.."
 print "[*] Query ",
 query.GetDomainFromReglist()
@@ -157,19 +185,16 @@ for D in query.BroDomain:
 m=mthread.run(query.BroDomain,prints)
 m=mthread.runip(result,prints_ip)
 dicts={}
-
-
-
 for Ds in query.BroDomain:
 	Ds=Ds.replace("http://www",'')
 	Ds=Ds.replace("/",'')
 	#print Ds
 	dicts.update({Ds:''})
-	for D in result:	
+	for D in result:
 		#print D
 		if Ds in D:
 			#print D
 			data=dicts[Ds]
 			dicts.update({Ds:data+","+D})
 print "[*] Html Result in "+argv[1]+".html"
-write_html(dicts)	
+write_html(dicts)
