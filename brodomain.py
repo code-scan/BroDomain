@@ -9,7 +9,7 @@ from binascii import a2b_base64 as base64_decode
 from sys import argv
 from Queue import Queue
 import sys
-import mthread
+import lib.mthread
 class aizhan:
 	def __init__(self,domain='',mail='',name=''):
 		self.domain=domain
@@ -160,7 +160,7 @@ def write_html(dicts):
 			data=data.replace("{li}",li)
 			html+=data
 
-	htmls=open('result_temp.html').read()
+	htmls=open('./log/result.template').read()
 	htmls=htmls.replace("{html}",html)
 	open('./log/'+argv[1]+".html",'w').write(htmls)
 over=0
@@ -182,8 +182,8 @@ print "\n[*] BroDmain Count:%d\n"%len(query.BroDomain)
 for D in query.BroDomain:
 	D=D.replace("http://","").replace("https://","").replace("/","")
 	data+=D+"\n"
-m=mthread.run(query.BroDomain,prints)
-m=mthread.runip(result,prints_ip)
+m=lib.mthread.run(query.BroDomain,prints)
+m=lib.mthread.runip(result,prints_ip)
 dicts={}
 for Ds in query.BroDomain:
 	Ds=Ds.replace("http://www",'')
