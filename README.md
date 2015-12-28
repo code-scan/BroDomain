@@ -24,8 +24,8 @@ python brodomain.py baidu.com
     \---生成html和log报告
 
 ## 报告demo
-  '''
+  ```
   ./log/ly.com.html
   ./log/ly.com.log
-  '''
+  ```
   <img src=./log/pic.png>
