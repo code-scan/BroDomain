@@ -128,7 +128,7 @@ def prints(d):
 				p=p.replace("http://","").replace("https://","").replace("/","")
 				data+=p+"\n"
 		print "[*] Query Over,Result is in %s.log"	%argv[1]
-		open('%s.log'%argv[1],'w').write(data)
+		open('./log/%s.log'%argv[1],'w').write(data)
 		return 1
 	for i in d:
 		stdout(i)
