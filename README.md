@@ -21,6 +21,7 @@
 ## 报告demo
   ./log/ly.com.html
   ./log/ly.com.log
+  <img src=./log/pic.png>
 ## 使用方法
 ```
 python brodomain.py baidu.com
