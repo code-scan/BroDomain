@@ -1,6 +1,11 @@
 # BroDomain
 
-#兄弟域名查询
+
+
+## 使用方法
+```
+python brodomain.py baidu.com
+```
 
 
 ## 运行逻辑
@@ -19,10 +24,8 @@
     \---生成html和log报告
 
 ## 报告demo
+  '''
   ./log/ly.com.html
   ./log/ly.com.log
+  '''
   <img src=./log/pic.png>
-## 使用方法
-```
-python brodomain.py baidu.com
-```
