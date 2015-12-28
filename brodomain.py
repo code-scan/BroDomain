@@ -166,22 +166,20 @@ def write_html(dicts):
 over=0
 if len(argv)!=2:
 	print '''
-      ___           ___           ___
-     /\  \         /\  \         /\  \
-    /::\  \       /::\  \       /::\  \
-   /:/\:\  \     /:/\:\  \     /:/\:\  \
-  /::\~\:\__\   /::\~\:\  \   /:/  \:\  \
- /:/\:\ \:|__| /:/\:\ \:\__\ /:/__/ \:\__\
- \:\~\:\/:/  / \/_|::\/:/  / \:\  \ /:/  /
-  \:\ \::/  /     |:|::/  /   \:\  /:/  /
-   \:\/:/  /      |:|\/__/     \:\/:/  /
-    \::/__/       |:|  |        \::/  /
-     ~~            \|__|         \/__/
-
+		88888888ba
+		88      "8b
+		88      ,8P
+		88aaaaaa8P' 8b,dPPYba,  ,adPPYba,
+		88""""""8b, 88P'   "Y8 a8"     "8a
+		88      `8b 88         8b       d8
+		88      a8P 88         "8a,   ,a8"
+		88888888P"  88          `"YbbdP"'
+		ver 1.0
+		By Cond0r
+		codescan.cn & c.pwn.ren
+		Usage: python brodomain.py codescan.cn
 
 	'''
-	print "Usage: python brodomain.py codescan.cn"
-
 	exit()
 print "[*] Init.."
 query=aizhan(argv[1])
