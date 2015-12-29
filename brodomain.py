@@ -176,7 +176,7 @@ if len(argv)!=2:
 		88888888P"  88          `"YbbdP"'
 		ver 1.0
 		By Cond0r
-		codescan.cn & c.pwn.ren
+		codescan.cn & pwn.ren
 		Usage: python brodomain.py codescan.cn
 
 	'''
