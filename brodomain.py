@@ -189,7 +189,7 @@ print "[*] Query Beian Code.."
 query.GetDomainBybeian()
 print "[*] Query All Domain Waiting.."
 print "[*] Query ",
-query.GetDomainFromReglist()
+#query.GetDomainFromReglist()
 data="Email: %s\nRegistrant: %s\n"%(query.RegEmail,query.RegName)
 data+="BroDmain Count:%d\n"%len(query.BroDomain)
 print "\n[*] BroDmain Count:%d\n"%len(query.BroDomain)
