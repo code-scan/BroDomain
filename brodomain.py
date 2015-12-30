@@ -177,7 +177,7 @@ if len(argv)!=2:
 		ver 1.0
 		By Cond0r
 		codescan.cn & pwn.ren
-		Usage: python brodomain.py codescan.cn
+		Usage: python brodomain.py codescan.cn 
 
 	'''
 	exit()
