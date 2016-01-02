@@ -53,7 +53,7 @@ class aizhan:
 	def GetDomainBybeian(self,domain='',backquery=False):
 		if domain:
 			self.domain_beian=domain
-		url='http://codescan.cn/beian.php?query=%s'%self.domain_beian
+		url='http://pwn.ren/beian.php?query=%s'%self.domain_beian
 		data=urllib2.urlopen(url).read()
 		r=re.findall('<td>([\s\S]*?)</td>',data)
 		#print r
